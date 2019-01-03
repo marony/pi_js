@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>PIを計算するよ</title>
+    <style>
+    	* { padding: 0; margin: 0; }
+    	canvas { background: #000; display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas" width="480" height="480"></canvas>
+
+<script>
+	var width = 480;
+    var height = 480;
+    var backColor = 'rgb(0, 0, 0)';
+    var arcColor = 'rgb(0, 255, 255)';
+    var pointColor = 'rgb(255, 0, 0)';
+    var textColor = 'rgb(255, 255, 255)';
+
+    var total = 0;
+    var count = 0;
+
+    function drawArc(ctx) {
+        {
+            // 背景を塗りつぶす
+            ctx.beginPath();
+            ctx.fillStyle = backColor;
+            ctx.fillRect(0, 0, width, height);
+        }
+        {
+            // 円弧を描く
+            var x = width
+            var y = height
+            ctx.beginPath();
+            ctx.fillStyle = arcColor;
+            ctx.moveTo(0, 0);
+            ctx.lineTo(width, 0);
+            ctx.arc(0, 0, width, 0 * Math.PI / 180, 90 * Math.PI / 180, false);
+            ctx.lineTo(0, 0);
+            ctx.fill();
+        }
+        {
+            // テキストを描く
+            drawText(ctx);
+        }
+    }
+
+    function randomPoint(canvas, ctx) {
+        var x = Math.floor(Math.random() * width);
+        var y = Math.floor(Math.random() * height);
+
+        var color = getColor(ctx, x, y);
+        ctx.beginPath();
+        ctx.fillStyle = pointColor;
+        ctx.arc(x, y, 5, 0, Math.PI*2, false);
+        ctx.fill();
+
+        return (color == arcColor);
+    }
+
+    function getColor(ctx, x, y) {
+        var pixel = ctx.getImageData(x, y, 1, 1);
+        var data = pixel.data;
+        var rgba = 'rgb(' + data[0] + ', ' + data[1] + ', ' + data[2] + ')';
+        return rgba;
+    }
+
+    function drawText(ctx) {
+        if (total <= 0)
+            return;
+        ctx.beginPath();
+        ctx.fillStyle = textColor;
+        ctx.fillText(
+            "pi = " + (count / total) * 4,
+            width - (width / 3), height - 16);
+        ctx.fillText(
+            "count = " + count + ", total = " + total,
+            width - (width / 3), height - 4);
+    }
+
+    window.onload = () => {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+
+        var f1 = () => {
+            if (randomPoint(canvas, ctx)) {
+                count += 1;
+            }
+            total += 1;
+            setTimeout(f2, 1);
+        };
+        var f2 = () => {
+            drawArc(ctx);
+            setTimeout(f1, 1);
+        }
+
+        drawArc(ctx);
+        setTimeout(f1, 1);
+    }
+</script>
+
+</body>
+</html>
