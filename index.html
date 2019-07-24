@@ -49,16 +49,16 @@
     }
 
     function randomPoint(canvas, ctx) {
-        const x = Math.floor(Math.random() * width);
-        const y = Math.floor(Math.random() * height);
+        const x = Math.random() * width;
+        const y = Math.random() * height;
 
         ctx.beginPath();
         ctx.fillStyle = pointColor;
-        ctx.arc(x, y, 5, 0, Math.PI*2, false);
+        ctx.arc(Math.floor(x), Math.floor(y), 5, 0, Math.PI*2, false);
         ctx.fill();
 
         // 円の中に収まっているか？
-        return (x * x + y * y < width * width);
+        return (x * x + y * y <= width * width);
     }
 
     function drawText(ctx) {
