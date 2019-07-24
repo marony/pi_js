@@ -13,15 +13,15 @@
 <canvas id="canvas" width="480" height="480"></canvas>
 
 <script>
-	var width = 480;
-    var height = 480;
-    var backColor = 'rgb(0, 0, 0)';
-    var arcColor = 'rgb(0, 255, 255)';
-    var pointColor = 'rgb(255, 0, 0)';
-    var textColor = 'rgb(255, 255, 255)';
+	const width = 480;
+    const height = 480;
+    const backColor = 'rgb(0, 0, 0)';
+    const arcColor = 'rgb(0, 255, 255)';
+    const pointColor = 'rgb(255, 0, 0)';
+    const textColor = 'rgb(255, 255, 255)';
 
-    var total = 0;
-    var count = 0;
+    let total = 0;
+    let count = 0;
 
     function drawArc(ctx) {
         {
@@ -32,8 +32,8 @@
         }
         {
             // 円弧を描く
-            var x = width
-            var y = height
+            const x = width
+            const y = height
             ctx.beginPath();
             ctx.fillStyle = arcColor;
             ctx.moveTo(0, 0);
@@ -49,23 +49,16 @@
     }
 
     function randomPoint(canvas, ctx) {
-        var x = Math.floor(Math.random() * width);
-        var y = Math.floor(Math.random() * height);
+        const x = Math.floor(Math.random() * width);
+        const y = Math.floor(Math.random() * height);
 
-        var color = getColor(ctx, x, y);
         ctx.beginPath();
         ctx.fillStyle = pointColor;
         ctx.arc(x, y, 5, 0, Math.PI*2, false);
         ctx.fill();
 
-        return (color == arcColor);
-    }
-
-    function getColor(ctx, x, y) {
-        var pixel = ctx.getImageData(x, y, 1, 1);
-        var data = pixel.data;
-        var rgba = 'rgb(' + data[0] + ', ' + data[1] + ', ' + data[2] + ')';
-        return rgba;
+        // 円の中に収まっているか？
+        return (x * x + y * y < width * width);
     }
 
     function drawText(ctx) {
@@ -82,17 +75,17 @@
     }
 
     window.onload = () => {
-        var canvas = document.getElementById('canvas');
-        var ctx = canvas.getContext('2d');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
 
-        var f1 = () => {
+        const f1 = () => {
             if (randomPoint(canvas, ctx)) {
                 count += 1;
             }
             total += 1;
             setTimeout(f2, 1);
         };
-        var f2 = () => {
+        const f2 = () => {
             drawArc(ctx);
             setTimeout(f1, 1);
         }
